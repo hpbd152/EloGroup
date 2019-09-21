@@ -6,8 +6,21 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field label="Nome" v-model="cadastro.nome" prepend-icon="mdi-account-circle" />
-          <v-text-field label="Telefone" v-model="cadastro.telefone" prepend-icon="mdi-account-circle" />
+          <v-text-field 
+            label="Nome" 
+            v-model="cadastro.nome" 
+            prepend-icon="mdi-account-circle"
+            v-validate="'required'"
+            :error-messages="errors.collect('name')"
+            data-vv-name="name"
+            />
+          <v-text-field label="Telefone"
+            v-model="cadastro.telefone"
+            prepend-icon="mdi-account-circle"
+            v-validate="'required'"
+            :error-messages="errors.collect('phone')"
+            data-vv-name="phone"
+          />
           <v-select
             :items="items"
             v-model="cadastro.como_conheceu"
@@ -43,7 +56,11 @@
 
 <script>
 const axios = require('axios');
+
 export default {
+  $_veeValidate: {
+    validator: 'new'
+  }, 
   data: () => ({
     items: ['Tv', 'Internet', 'Outros'],
     cadastro: {
@@ -60,9 +77,20 @@ export default {
   }),
   methods: {
     enviar(){
-      axios.post('http://localhost:8080/', this.cadastro )
-      .then(response => { console.log(response)})
-    },
+      this.$validator.validateAll().then( result => {
+        if(result == false){
+          this.message_box = true
+          this.mensagem.ok = false
+          this.mensagem.message  = "Por favor preencha todos os campos obrigatórios"
+          this.mensagem.titulo = "ERROR"
+          this.carregando = false;
+        }
+        else{
+          axios.post('http://localhost:8080/', this.cadastro )
+          .then(response => { console.log(response)})
+        }
+      })
+    }
   }
 };
 </script>

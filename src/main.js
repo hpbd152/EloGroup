@@ -7,12 +7,12 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import vuetify from './plugins/vuetify';
 
 Vue.use(Vuetify)
+Vue.use(BootstrapVue);
 
 const opts = {}
 
 export default new Vuetify(opts)
 
-Vue.use(BootstrapVue);
 Vue.config.productionTip = false
 
 new Vue({
