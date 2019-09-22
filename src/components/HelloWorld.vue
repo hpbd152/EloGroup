@@ -19,7 +19,7 @@
                 @keypress="isNumber($event)"
                 label="Telefone"
                 v-model="cadastro.telefone"
-                v-mask="'## - #########'"
+                v-mask="'## - ########'"
               />
             </v-flex>
             <v-flex xs6 class='pa-2'>
@@ -64,6 +64,24 @@
         <v-btn color="info" :disabled="enviou" @click="enviar">Enviar</v-btn>
       </v-card-actions>
     </v-card>
+
+    <v-dialog
+        v-model="message_box"
+        max-width="400"
+      >
+        <v-card>
+          <v-card-title class="headline black--text">{{mensagem.titulo}}</v-card-title><br>
+          <v-card-text>{{mensagem.message}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="white darken-1"
+              @click="message_box = false;"
+            > Ok
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </v-container>
 </template>
 
@@ -82,6 +100,11 @@ export default {
     },
     checkbox: [],
     enviou: false,
+    mensagem: {
+      titulo: '',
+      message: ''
+    },
+    message_box: false,
   }),
   methods: {
     isNumber: function(evt) {
@@ -94,14 +117,44 @@ export default {
       }
     },
     enviar(){
-        this.enviou = true;
+      var erro = false;
+      if(this.cadastro.nome != null){
+        var x = this.cadastro.nome.split(' ');
+        if(x[1] == null || x[1] == ''){
+          erro = true;
+          this.mensagem.message = 'É necessário informar um sobrenome. ';
+        }
+        if(this.cadastro.telefone){
+          if(this.cadastro.telefone.length != 13){
+            erro = true;
+            this.mensagem.message = this.mensagem.message + 'O telefone deve possuir 10 dígitos. ';
+          }
+        } else {
+          erro = true;
+          this.mensagem.message = this.mensagem.message + 'O campo telefone é obrigatório. ';
+        }
+        if(erro == false){
+          this.enviou = true;
           if(this.cadastro.rede_social == '1'){
             this.cadastro.checkbox = this.checkbox;
           }
           axios.post('http://localhost:8080/', this.cadastro )
-          .then(response => { console.log(response)})
-        
+          .then(response => {})
 
+          this.mensagem.titulo = 'Sucesso!';
+          this.mensagem.message = 'O cadastro foi feito com Sucesso!';
+          this.message_box = true;
+        }
+        else{
+          this.mensagem.titulo = 'ERROR';
+          this.message_box = true;
+        }
+      }
+      else {
+        this.mensagem.titulo = 'ERROR';
+        this.mensagem.message = 'O campo Nome é obrigatório.';
+        this.message_box = true;
+      }
     }
   }
 };
