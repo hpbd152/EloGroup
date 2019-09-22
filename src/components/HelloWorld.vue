@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    
     <v-card width="500" class="mx-auto mt-5">
       <v-card-title>
 
@@ -15,6 +16,7 @@
             </v-flex>
             <v-flex xs6 class='pa-2'>
               <v-text-field 
+                @keypress="isNumber($event)"
                 label="Telefone"
                 v-model="cadastro.telefone"
                 v-mask="'## - #########'"
@@ -29,21 +31,24 @@
             </v-flex>
             <v-flex xs6 class='pa-2'>
               <v-radio-group v-model="cadastro.rede_social" label="Possui rede social" :mandatory="false">
-                <v-radio label="Sim" value="1"></v-radio>
-                <v-radio label="Não" value="0"></v-radio>
+                <v-radio label="Sim" value="1" color="orange"></v-radio>
+                <v-radio label="Não" value="0" color="orange"></v-radio>
               </v-radio-group>
             </v-flex>
             <v-flex xs12 class='pa-2'>
               <div v-if="cadastro.rede_social == '1'"> Quais?
                 <v-checkbox
+                  style="margin-top:-1px;"
                   v-model="cadastro.checkbox.Facebook"
                   label="Facebook"
                 ></v-checkbox>
                 <v-checkbox
+                  style="margin-top:-25px;"
                   v-model="cadastro.checkbox.LinkedIn"
                   label="LinkedIn"
                 ></v-checkbox>
                 <v-checkbox
+                  style="margin-top:-25px;"
                   v-model="cadastro.checkbox.Instagram"
                   label="Instagram"
                 ></v-checkbox>
@@ -82,6 +87,15 @@ export default {
     },
   }),
   methods: {
+    isNumber: function(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46 && charCode !== 44) {
+          evt.preventDefault();
+      } else {
+          return true;
+      }
+    },
     enviar(){
       this.$validator.validateAll().then( result => {
         if(result == false){
