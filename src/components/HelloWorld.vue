@@ -39,18 +39,21 @@
               <div v-if="cadastro.rede_social == '1'"> Quais?
                 <v-checkbox
                   style="margin-top:-1px;"
-                  v-model="cadastro.checkbox.Facebook"
+                  v-model="checkbox"
                   label="Facebook"
+                  value="Facebook"
                 ></v-checkbox>
                 <v-checkbox
                   style="margin-top:-25px;"
-                  v-model="cadastro.checkbox.LinkedIn"
+                  v-model="checkbox"
                   label="LinkedIn"
+                  value="LinkedIn"
                 ></v-checkbox>
                 <v-checkbox
                   style="margin-top:-25px;"
-                  v-model="cadastro.checkbox.Instagram"
+                  v-model="checkbox"
                   label="Instagram"
+                  value="Instagram"
                 ></v-checkbox>
               </div>
             </v-flex>
@@ -58,7 +61,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="info" @click="enviar">Enviar</v-btn>
+        <v-btn color="info" :disabled="enviou" @click="enviar">Enviar</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -69,9 +72,6 @@
 const axios = require('axios');
 
 export default {
-  $_veeValidate: {
-    validator: 'new'
-  }, 
   data: () => ({
     items: ['Tv', 'Internet', 'Outros'],
     cadastro: {
@@ -79,12 +79,9 @@ export default {
       telefone: null,
       como_conheceu: null,
       rede_social: null,
-      checkbox: {
-        Facebook: false,
-        LinkedIn: false,
-        Instagram: false,
-      },
     },
+    checkbox: [],
+    enviou: false,
   }),
   methods: {
     isNumber: function(evt) {
@@ -97,19 +94,14 @@ export default {
       }
     },
     enviar(){
-      this.$validator.validateAll().then( result => {
-        if(result == false){
-          this.message_box = true
-          this.mensagem.ok = false
-          this.mensagem.message  = "Por favor preencha todos os campos obrigatórios"
-          this.mensagem.titulo = "ERROR"
-          this.carregando = false;
-        }
-        else{
+        this.enviou = true;
+          if(this.cadastro.rede_social == '1'){
+            this.cadastro.checkbox = this.checkbox;
+          }
           axios.post('http://localhost:8080/', this.cadastro )
           .then(response => { console.log(response)})
-        }
-      })
+        
+
     }
   }
 };
