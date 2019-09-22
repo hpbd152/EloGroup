@@ -6,45 +6,50 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field 
-            label="Nome" 
-            v-model="cadastro.nome" 
-            prepend-icon="mdi-account-circle"
-            v-validate="'required'"
-            :error-messages="errors.collect('name')"
-            data-vv-name="name"
-            />
-          <v-text-field label="Telefone"
-            v-model="cadastro.telefone"
-            prepend-icon="mdi-account-circle"
-            v-validate="'required'"
-            :error-messages="errors.collect('phone')"
-            data-vv-name="phone"
-          />
-          <v-select
-            :items="items"
-            v-model="cadastro.como_conheceu"
-            prepend-icon="mdi-account-circle"
-            label="Como nos conheceu"
-          ></v-select>
-          <v-radio-group v-model="cadastro.rede_social" label="Possui rede social" :mandatory="false">
-            <v-radio label="Sim" value="1"></v-radio>
-            <v-radio label="Não" value="0"></v-radio>
-          </v-radio-group>
-          <div v-if="cadastro.rede_social == '1'"> Quais?
-            <v-checkbox
-              v-model="cadastro.checkbox.Facebook"
-              label="Facebook"
-            ></v-checkbox>
-            <v-checkbox
-              v-model="cadastro.checkbox.LinkedIn"
-              label="LinkedIn"
-            ></v-checkbox>
-            <v-checkbox
-              v-model="cadastro.checkbox.Instagram"
-              label="Instagram"
-            ></v-checkbox>
-          </div>
+          <v-layout row wrap class='pa-2'>
+            <v-flex xs12 class='pa-2'>
+              <v-text-field 
+                label="Nome" 
+                v-model="cadastro.nome"
+                />
+            </v-flex>
+            <v-flex xs6 class='pa-2'>
+              <v-text-field 
+                label="Telefone"
+                v-model="cadastro.telefone"
+                v-mask="'## - #########'"
+              />
+            </v-flex>
+            <v-flex xs6 class='pa-2'>
+              <v-select
+                :items="items"
+                v-model="cadastro.como_conheceu"
+                label="Como nos conheceu"
+              ></v-select>
+            </v-flex>
+            <v-flex xs6 class='pa-2'>
+              <v-radio-group v-model="cadastro.rede_social" label="Possui rede social" :mandatory="false">
+                <v-radio label="Sim" value="1"></v-radio>
+                <v-radio label="Não" value="0"></v-radio>
+              </v-radio-group>
+            </v-flex>
+            <v-flex xs12 class='pa-2'>
+              <div v-if="cadastro.rede_social == '1'"> Quais?
+                <v-checkbox
+                  v-model="cadastro.checkbox.Facebook"
+                  label="Facebook"
+                ></v-checkbox>
+                <v-checkbox
+                  v-model="cadastro.checkbox.LinkedIn"
+                  label="LinkedIn"
+                ></v-checkbox>
+                <v-checkbox
+                  v-model="cadastro.checkbox.Instagram"
+                  label="Instagram"
+                ></v-checkbox>
+              </div>
+            </v-flex>
+          </v-layout>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -55,6 +60,7 @@
 </template>
 
 <script>
+
 const axios = require('axios');
 
 export default {

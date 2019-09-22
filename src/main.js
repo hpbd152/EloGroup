@@ -5,7 +5,8 @@ import Vuetify from 'vuetify/lib'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import vuetify from './plugins/vuetify';
-
+import VueMask from 'v-mask'
+Vue.use(VueMask);
 Vue.use(Vuetify)
 Vue.use(BootstrapVue);
 
